@@ -2,6 +2,7 @@ const express = require("express")
 const config = require("./config/mongoose")
 const userRouter = require("./users/users.routers")
 const authRouter = require("./auth/auth.router")
+const blogRouter = require("./blog/blog.router")
 require("dotenv").config()
 
 const port = process.env.PORT
@@ -12,6 +13,7 @@ const app = express()
 app.use(express.json())
 
 app.use("/auth", authRouter)
+app.use("/blog", blogRouter)
 app.use("/users", userRouter)
 
 app.get('*', (req, res) => {
