@@ -4,6 +4,13 @@ const createBlog =  async (req, res) => {
     try {
         const author = req.user
         const { title, description, tag, reading_time, body} = req.body
+        const existingTitle = await BlogModel.findOne({title : title})
+        if (existingTitle) {
+            return res.status(422).json({
+                status : "error",
+                data : "Title already exist"
+            })
+        }
         const blog = await BlogModel.create({
             title,
             description,
@@ -26,7 +33,34 @@ const createBlog =  async (req, res) => {
 
 const getAllBlogs = async (req, res) => {
     try {
-        const blog = await BlogModel.find()
+        let { page, size } = req.query
+        if (!page) {
+            page = 1
+        }
+        if (!size) {
+            size = 20
+        }
+        const limit = parseInt(size)
+        const skip = (page - 1) * size
+        const blog = await BlogModel.find().limit(limit).skip(skip)
+        return res.status(200).json({
+            status : "success",
+            page,
+            size,
+            data : blog
+        })
+    } catch (error) {
+        return res.status(422).json({
+            status : "error",
+            data : error.message
+        })
+    }
+}
+
+const getBlogsForUser = async (req, res) => {
+    try {
+        const author = req.user._id
+        const blog = await BlogModel.find({author : author})
         return res.status(200).json({
             status : "success",
             data : blog
@@ -39,12 +73,26 @@ const getAllBlogs = async (req, res) => {
     }
 }
 
+const getoneBlog = async (req, res) => {
+    try {
+        const id = req.params.id
+        const existingBlog = await BlogModel.findById({_id : id})
+        return res.status(200).json({
+            status : "success",
+            data : existingBlog
+        })
+    } catch (error) {
+        return res.status(422).json({
+            status : "error",
+            data : error.message
+        })
+    }
+}
+
 const updateBlog = async (req, res) => {
     try {
         const id = req.params.id
-        console.log({id})
         const author = req.user._id
-        console.log({author})
         const { title, description, tag, reading_time, body } = req.body
         const existingBlog = await BlogModel.findOne({ _id : id, author : author})
         console.log({existingBlog})
@@ -112,6 +160,8 @@ const deleteBlog = async (req, res) => {
 module.exports = {
     createBlog,
     getAllBlogs,
+    getoneBlog,
     updateBlog,
-    deleteBlog
+    deleteBlog,
+    getBlogsForUser
 }

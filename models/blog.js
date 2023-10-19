@@ -6,7 +6,7 @@ const BlogSchema = new schema({
         type : mongoose.Schema.ObjectId,
         ref : "users"
     },
-    title : {type: String, null: false},
+    title : {type: String, null: false, unique : true},
     description : {type : String, null: false},
     tag : {type : String},
     state : {type: String, enum: ["draft", "published"], default : "draft"},
