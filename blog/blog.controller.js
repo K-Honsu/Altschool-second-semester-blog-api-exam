@@ -95,7 +95,6 @@ const updateBlog = async (req, res) => {
         const author = req.user._id
         const { title, description, tag, reading_time, body } = req.body
         const existingBlog = await BlogModel.findOne({ _id : id, author : author})
-        console.log({existingBlog})
         if (!existingBlog) {
             return res.status(404).json({
                 status : "error",
@@ -143,7 +142,7 @@ const deleteBlog = async (req, res) => {
                 data : `Blog not found`
             })
         }
-        await task.deleteOne()
+        await blog.deleteOne()
         return res.status(200).json({
             status : "success",
             message : "Blog deleted successfully",
