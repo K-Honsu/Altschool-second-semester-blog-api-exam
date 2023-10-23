@@ -6,6 +6,7 @@ const viewRouter = require("./views/views.routers")
 
 
 const app = express()
+app.use("/public", express.static("public"))
 
 app.set("view engine", "ejs")
 

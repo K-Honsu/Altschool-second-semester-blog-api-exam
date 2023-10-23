@@ -4,29 +4,21 @@ const cookieParser = require("cookie-parser")
 
 const router = express.Router()
 
+router.use("/public", express.static("public"))
 
-// router.get("/home", async (req, res) => {
-//     const perPage = 20;
-//     const page = parseInt(req.params.page) || 1;
-//     try {
-//         const response = await blogService.getAllBlogs(req, res);
-//         const totalBlogs = response.data.length;
 
-//         const blogs = response.data.slice((page - 1) * perPage, page * perPage);
+router.get("/blog", async (req, res) => {
+    res.render("blog")
+})
 
-//         const totalPages = Math.ceil(totalBlogs / perPage);
+router.get("/login", async(req, res) => {
+    res.render("login")
+})
 
-//         res.render("home", {
-//             blogs: blogs,
-//             current: page,
-//             pages: totalPages,
-//         });
-//     } catch (error) {
-//         res.render("home")
-//     }
-   
-//     // return res.render("home", {blogs, current: page, pages: Math.ceil(count / perPage), blogs: blogs, })
-// })
+router.get("/welcome", async (req, res) => {
+    res.render("welcome")
+})
+
 
 router.get("/home/:page", async (req, res) => {
     const perPage = 20;
@@ -51,12 +43,3 @@ router.get("/home/:page", async (req, res) => {
 
 
 module.exports = router
-
-
-// const response = await blogService.getAllBlogs().find({}).skip((perPage * page) - perPage).limit(perPage).exec(function(err, blogs) {
-//     blogService.getAllBlogs.count().exec(function(err, count) {
-//         if (err) return next(err)
-//     })
-// })
-// console.log({response})
-// const blogs = Array.isArray(response.data) ? response.data : [];
