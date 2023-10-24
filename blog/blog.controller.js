@@ -1,32 +1,47 @@
 const BlogModel = require("../models/blog")
+const { cloudinaryV2, streamUploadFile } = require("../utils/cloudinary")
 
-const createBlog =  async (req, res) => {
+const createBlog = async (req, res) => {
     try {
         const author = req.user
-        const { title, description, tag, reading_time, body} = req.body
-        const existingTitle = await BlogModel.findOne({title : title})
+        const file = req.file
+        const { title, description, tag, reading_time, body } = req.body
+        let result;
+        if (file) {
+            result = await streamUploadFile(file.buffer);
+        } else {
+            result = {
+                cloudinaryId : "",
+                path: ""
+            };
+
+        }
+        const existingTitle = await BlogModel.findOne({ title: title })
         if (existingTitle) {
             return res.status(422).json({
-                status : "error",
-                data : "Title already exist"
+                status: "error",
+                data: "Title already exist"
             })
         }
         const blog = await BlogModel.create({
             title,
             description,
-            tag, 
+            tag,
             reading_time,
+            cloudinaryId: result.public_id,
+            path : result.secure_url,
             body,
-            author : author._id
+            author: author._id,
         })
         return res.status(201).json({
-            status : "success",
-            data : blog
+            status: "success",
+            data1 : blog
         })
     } catch (error) {
+        console.log({ error })
         return res.status(422).json({
-            status : "error",
-            data : error.message
+            status: "error",
+            data: error.message
         })
     }
 }
@@ -44,15 +59,15 @@ const getAllBlogs = async (req, res) => {
         const skip = (page - 1) * size
         const blog = await BlogModel.find().limit(limit).skip(skip)
         return res.status(200).json({
-            status : "success",
+            status: "success",
             page,
             size,
-            data : blog
+            data: blog
         })
     } catch (error) {
         return res.status(422).json({
-            status : "error",
-            data : error.message
+            status: "error",
+            data: error.message
         })
     }
 }
@@ -60,15 +75,15 @@ const getAllBlogs = async (req, res) => {
 const getBlogsForUser = async (req, res) => {
     try {
         const author = req.user._id
-        const blog = await BlogModel.find({author : author})
+        const blog = await BlogModel.find({ author: author })
         return res.status(200).json({
-            status : "success",
-            data : blog
+            status: "success",
+            data: blog
         })
     } catch (error) {
         return res.status(422).json({
-            status : "error",
-            data : error.message
+            status: "error",
+            data: error.message
         })
     }
 }
@@ -76,15 +91,15 @@ const getBlogsForUser = async (req, res) => {
 const getoneBlog = async (req, res) => {
     try {
         const id = req.params.id
-        const existingBlog = await BlogModel.findById({_id : id})
+        const existingBlog = await BlogModel.findById({ _id: id })
         return res.status(200).json({
-            status : "success",
-            data : existingBlog
+            status: "success",
+            data: existingBlog
         })
     } catch (error) {
         return res.status(422).json({
-            status : "error",
-            data : error.message
+            status: "error",
+            data: error.message
         })
     }
 }
@@ -94,11 +109,11 @@ const updateBlog = async (req, res) => {
         const id = req.params.id
         const author = req.user._id
         const { title, description, tag, reading_time, body } = req.body
-        const existingBlog = await BlogModel.findOne({ _id : id, author : author})
+        const existingBlog = await BlogModel.findOne({ _id: id, author: author })
         if (!existingBlog) {
             return res.status(404).json({
-                status : "error",
-                message : "Blog not found"
+                status: "error",
+                message: "Blog not found"
             })
         }
         if (title) {
@@ -118,15 +133,15 @@ const updateBlog = async (req, res) => {
         }
         await existingBlog.save()
         return res.status(200).json({
-            status : "success",
-            message : "Blog Updated Successfully",
-            existingBlog 
+            status: "success",
+            message: "Blog Updated Successfully",
+            existingBlog
         })
     } catch (error) {
-        console.log({error})
+        console.log({ error })
         return res.status(422).json({
-            status : "error",
-            data : error.message
+            status: "error",
+            data: error.message
         })
     }
 }
@@ -135,22 +150,22 @@ const deleteBlog = async (req, res) => {
     try {
         const id = req.params.id
         const author_id = req.user._id
-        const blog = await BlogModel.findOne({_id : id, author : author_id})
+        const blog = await BlogModel.findOne({ _id: id, author: author_id })
         if (!blog) {
             return res.status(404).json({
-                status : "error",
-                data : `Blog not found`
+                status: "error",
+                data: `Blog not found`
             })
         }
         await blog.deleteOne()
         return res.status(200).json({
-            status : "success",
-            message : "Blog deleted successfully",
+            status: "success",
+            message: "Blog deleted successfully",
         })
     } catch (error) {
         return res.status(400).json({
-            status : "error",
-            message : error.message
+            status: "error",
+            message: error.message
         })
     }
 }
