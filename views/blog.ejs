@@ -432,7 +432,9 @@
     <section class="home" id="home">
       <div class="home-text container">
         <h2 class="home-title">The Digital Chronicles</h2>
-        <span class="home-subtitle"> A blog covering all things related to the digital world.</span>
+        <span class="home-subtitle">
+          A blog covering all things related to the digital world.</span
+        >
       </div>
     </section>
 
@@ -445,7 +447,28 @@
 
     <section class="post container">
       <!-- post-box1 -->
-      <div class="post-box mobile">
+      <% blogs.forEach(function (blog) { %>
+        <div class="post-box <%= blog.category %>">
+            <img src="<%= blog.path %>" alt="" class="post-img" />
+            <h2 class="category"><%= blog.tag %></h2>
+            <a href="post-page.html" class="post-title">
+                <%= blog.title %>
+            </a>
+            <% const postDate = blog.is_created; %>
+            <span class="post-date"><%= blog.is_created.toUTCString() %></span>
+            <p class="post-description">
+                <%= blog.description %>
+            </p>
+            <p class="post-description">
+                <%= blog.body %>
+            </p>
+            <div class="profile">
+                <img src="<%= blog.authorAvatar %>" alt="" class="profile-img" />
+                <span class="profile-name"><%= blog.author.username %></span>
+            </div>
+        </div>
+    <% }); %>
+      <!-- <div class="post-box mobile">
         <img src="../public/post-1.jpg" alt="" class="post-img" />
         <h2 class="category">Mobile</h2>
         <a href="post-page.html" class="post-title">
@@ -461,10 +484,10 @@
           <img src="../public/profile-1.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box2 -->
-      <div class="post-box tech">
+      <!-- <div class="post-box tech">
         <img src="../public/post-2.jpg" alt="" class="post-img" />
         <h2 class="category">Tech</h2>
         <a href="post-page.html" class="post-title">
@@ -480,10 +503,10 @@
           <img src="../public/profile-2.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box3 -->
-      <div class="post-box mobile">
+      <!-- <div class="post-box mobile">
         <img src="../public/post-3.jpg" alt="" class="post-img" />
         <h2 class="category">Mobile</h2>
         <a href="post-page.html" class="post-title">
@@ -499,10 +522,10 @@
           <img src="../public/profile-3.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box4 -->
-      <div class="post-box design">
+      <!-- <div class="post-box design">
         <img src="../public/post-4.jpg" alt="" class="post-img" />
         <h2 class="category">Design</h2>
         <a href="post-page.html" class="post-title">
@@ -518,10 +541,10 @@
           <img src="../public/profile-1.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box5 -->
-      <div class="post-box tech">
+      <!-- <div class="post-box tech">
         <img src="../public/post-5.jpg" alt="" class="post-img" />
         <h2 class="category">Tech</h2>
         <a href="post-page.html" class="post-title">
@@ -537,10 +560,10 @@
           <img src="../public/profile-2.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box6 -->
-      <div class="post-box mobile">
+      <!-- <div class="post-box mobile">
         <img src="../public/post-6.jpg" alt="" class="post-img" />
         <h2 class="category">Mobile</h2>
         <a href="post-page.html" class="post-title">
@@ -556,10 +579,10 @@
           <img src="../public/profile-3.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box7 -->
-      <div class="post-box design">
+      <!-- <div class="post-box design">
         <img src="../public/post-7.jpg" alt="" class="post-img" />
         <h2 class="category">Design</h2>
         <a href="post-page.html" class="post-title">
@@ -575,10 +598,10 @@
           <img src="../public/profile-1.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box8 -->
-      <div class="post-box tech">
+      <!-- <div class="post-box tech">
         <img src="../public/post-8.jpg" alt="" class="post-img" />
         <h2 class="category">Tech</h2>
         <a href="post-page.html" class="post-title">
@@ -594,10 +617,10 @@
           <img src="../public/profile-2.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
 
       <!-- post-box2 -->
-      <div class="post-box design">
+      <!-- <div class="post-box design">
         <img src="../public/post-9.jpg" alt="" class="post-img" />
         <h2 class="category">Design</h2>
         <a href="post-page.html" class="post-title">
@@ -613,16 +636,38 @@
           <img src="../public/profile-3.jpg" alt="" class="profile-img" />
           <span class="profile-name">Oluwaferanmi Adeyemi</span>
         </div>
-      </div>
+      </div> -->
     </section>
 
     <div class="footer container">
       <p>&#169; K_Honsu All Rights Reserved.</p>
       <div class="social">
-        <a href="https://twitter.com/K_Honsu" target="_blank"><i class="bx bxl-twitter"></i></a>
-        <a href="https://www.linkedin.com/in/feranmi-adeyemi-618843257/" target="_blank"><i class="bx bxl-linkedin"></i></a>
-        <a href="https://github.com/K-Honsu" target="_blank"><i class="bx bxl-github"></i></a>
+        <a href="https://twitter.com/K_Honsu" target="_blank"
+          ><i class="bx bxl-twitter"></i
+        ></a>
+        <a
+          href="https://www.linkedin.com/in/feranmi-adeyemi-618843257/"
+          target="_blank"
+          ><i class="bx bxl-linkedin"></i
+        ></a>
+        <a href="https://github.com/K-Honsu" target="_blank"
+          ><i class="bx bxl-github"></i
+        ></a>
       </div>
     </div>
+    <script>
+        function getFormattedDate(date) {
+            const days = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+            const months = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+    
+            const day = days[date.getUTCDay()];
+            const month = months[date.getUTCMonth()];
+            const dayOfMonth = date.getUTCDate();
+            const year = date.getUTCFullYear();
+    
+            return `${day} ${month} ${dayOfMonth} ${year}`;
+        }
+    </script>
+    
   </body>
 </html>
