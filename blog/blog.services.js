@@ -11,7 +11,7 @@ const getAllBlogs = async (req, res) => {
         // }
         // const limit = parseInt(size)
         // const skip = (page - 1) * size
-        const blog = await BlogModel.find()
+        const blog = await BlogModel.find().populate("author", "username")
         return {
             code : 200,
             status : "success",

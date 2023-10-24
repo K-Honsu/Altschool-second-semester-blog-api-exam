@@ -11,6 +11,7 @@ app.use("/public", express.static("public"))
 app.set("view engine", "ejs")
 
 app.use(express.json())
+app.use(express.urlencoded({ extended : true }))
 
 app.use("/auth", authRouter)
 app.use("/blog", blogRouter)
