@@ -1,91 +1,91 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <style>
-        body {
-            margin: 0px;
-            background: #1e242a;
-            overflow: hidden;
-        }
-        #main {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-        }
-        #box1 {
-            width: 530px;
-            height: 625px;
-            background-image: url("../public/cloudimg1.png");
-            position: absolute;
-            bottom: -100%;
-            left: 30%;
-            animation: anim 2s forwards, anim2 3s forwards 3s;
-        }
-        #box1:after {
-            content: "";
-            position: absolute;
-            width: 530px;
-            height: 625px;
-            background-image: url("../public/cloudimg2.png");
-            left: 0px;
-            z-index: -1;
-        }
+      body {
+        margin: 0px;
+        background: #1e242a;
+        overflow: hidden;
+      }
+      #main {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+      }
+      #box1 {
+        width: 530px;
+        height: 625px;
+        background-image: url("../public/cloudimg1.png");
+        position: absolute;
+        bottom: -100%;
+        left: 30%;
+        animation: anim 2s forwards, anim2 3s forwards 3s;
+      }
+      #box1:after {
+        content: "";
+        position: absolute;
+        width: 530px;
+        height: 625px;
+        background-image: url("../public/cloudimg2.png");
+        left: 0px;
+        z-index: -1;
+      }
 
-        #text-animation {
-            position: absolute;
-            left: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 36px;
-            color: #fff;
-            opacity: 0;
-            animation: textAnim 3s 6s forwards;
-        }
+      #text-animation {
+        position: absolute;
+        left: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 36px;
+        color: #fff;
+        opacity: 0;
+        animation: textAnim 3s 6s forwards;
+      }
 
-        @keyframes anim {
-            from {
-                bottom: -100%;
-            }
-            to {
-                bottom: 0%;
-            }
+      @keyframes anim {
+        from {
+          bottom: -100%;
         }
+        to {
+          bottom: 0%;
+        }
+      }
 
-        @keyframes anim2 {
-            from {
-                left: 30%;
-                width: 530px;
-            }
-            to {
-                width: 0px;
-                left: 50%;
-            }
+      @keyframes anim2 {
+        from {
+          left: 30%;
+          width: 530px;
         }
+        to {
+          width: 0px;
+          left: 50%;
+        }
+      }
 
-        @keyframes textAnim {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+      @keyframes textAnim {
+        from {
+          opacity: 0;
         }
+        to {
+          opacity: 1;
+        }
+      }
 
-        #text-animation {
-            animation-fill-mode: forwards;
-        }
+      #text-animation {
+        animation-fill-mode: forwards;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="main">
-        <div id="box1"></div>
-        <div id="text-animation">Welcome to my blog</div>
+      <div id="box1"></div>
+      <div id="text-animation">Welcome to my blog</div>
     </div>
 
     <script>
-        setTimeout(function () {
-            window.location.href = "/views/blog"
-        }, 9000);
+      setTimeout(function () {
+        window.location.href = "/views/blog";
+      }, 9000);
     </script>
-</body>
+  </body>
 </html>
