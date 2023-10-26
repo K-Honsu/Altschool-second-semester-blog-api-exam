@@ -5,6 +5,7 @@ const userService = require("../users/user.service")
 const jwt = require("jsonwebtoken")
 const cookieParser = require("cookie-parser")
 const { settings } = require("../utils/cloudinary")
+const { countWords, calculateReadingTime } = require("../utils/reading.algorithm")
 const upload = settings()
 const methodOverride = require('method-override')
 require("dotenv").config()
@@ -22,7 +23,11 @@ router.get("/welcome", async (req, res) => {
 router.get("/detail/:blogId", async (req, res) => {
     const blogIds = req.params.blogId;
     const response = await blogService.getOneBlog(blogIds)
-    res.render("detail", {user : null, blog : response.data})
+
+    const wordCount = countWords(response.data.body);
+    const readingSpeed = 200;
+    const readingTime = calculateReadingTime(wordCount, readingSpeed);
+    res.render("detail", {user : null, blog : response.data, readingTime})
 })
 
 router.get("/log", async (req, res) => {
@@ -42,6 +47,55 @@ router.post("/log", async (req, res) => {
     } else {
         res.render("login", { message: response.data, user: null })
     }
+})
+
+router.get("/resetPassword/:user_id/:token", async (req, res) => {
+    const user_id = req.params.user_id;
+    const token = req.params.token;
+    res.render("resetPassword", { user_id, token,message: null });
+});
+
+router.post("/resetPassword/:user_id/:token", async (req, res) => {
+    const user_id = req.params.user_id;
+    const token = req.params.token;
+    const newpassword = req.body.newpassword;
+    const confirmpassword = req.body.confirmpassword;
+
+    const response = await authServices.ResetPassword({ user_id, newpassword, confirmpassword });
+
+    if (response.code === 404) {
+        res.render("resetPassword", { message: response.data, user_id, token });
+    } else if (response.code === 406) {
+        res.render("resetPassword", { message: response.data, user_id, token });
+    } else if (response.code === 200) {
+        res.render("resetPassword", { message: response.data, user_id, token });
+    } else if (response.code === 422) {
+        res.render("resetPassword", { message: response.data, user_id, token });
+    }
+});
+
+
+router.get("/forgotPassword", async (req, res) => {
+    res.render("forgotPassword", {message : null})
+})
+
+router.post("/forgotPassword", async (req, res) => {
+    console.log(req.body)
+    const response = await authServices.ForgotPassword({
+        email : req.body.email
+    })
+    console.log(response)
+    if (response.code === 404 ) {
+        res.render("forgotPassword", {message : response.data})
+    } else if (response.code === 422 ) {
+        res.render("forgotPassword", {message : response.data})
+    } else if (response.code === 200 ) {
+        res.render("forgotPassword", {message : response.data})
+    }
+})
+
+router.get("/resetPassword", async (req, res) => {
+    res.render("resetPassword")
 })
 
 router.post("/signup", async (req, res) => {
@@ -90,7 +144,6 @@ router.get("/logout", (req, res) => {
 })
 
 router.get("/blog", async (req, res) => {
-    console.log(res.locals.user)
     const response = await blogService.getAllBlogs()
     const blogs = Array.isArray(response.data) ? response.data : [];
     return res.render("blog", { user: res.locals.user || null, blogs })
@@ -121,7 +174,6 @@ router.put("/blog/:blogId", async (req, res) => {
     const author_id = res.locals.user._id;
     const blogId = req.params.blogId;
     const blogResponse = await blogService.getAllBlogs()
-    console.log(blogId)
     const response = await blogService.updateBlogStatus(blogId, author_id);
     if (response.code === 200) {
         res.redirect("/views/manageblogs");

@@ -304,6 +304,27 @@
         text-align: justify;
       }
 
+      .search-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .search-box input {
+        padding: 10px;
+        border: 2px solid #ccc;
+        border-radius: 5px;
+        outline: none;
+        width: 80%;
+        max-width: 400px;
+      }
+
+      .read-big {
+        font-size: 15px;
+        color: var(--text-color);
+      }
+
       @media (max-width: 1060px) {
         .container {
           margin: 0 auto;
@@ -440,17 +461,28 @@
       <span class="filter-item" data-filter="mobile">Mobile</span>
     </div>
 
+    <div class="search-box">
+      <input
+        type="text"
+        id="blog-search"
+        placeholder="Search for author, tag or title"
+      />
+    </div>
+
     <section class="post container">
       <% blogs.forEach(function (blog) { %> <% if (blog.state === "published") {
       %>
       <div class="post-box <%= blog.category %>">
         <img src="<%= blog.path %>" alt="" class="post-img" />
         <h2 class="category"><%= blog.tag %></h2>
-        <a href="/views/detail/<%= blog._id %>" class="post-title"> <%= blog.title %> </a>
+        <a class="post-title">
+          <%= blog.title %>
+        </a>
         <% const postDate = blog.is_created; %>
         <span class="post-date"><%= blog.is_created.toUTCString() %></span>
         <p class="post-description"><%= blog.description %></p>
         <p class="post-description"><%= blog.body %></p>
+        <p class="post-description"><a href="/views/detail/<%= blog._id %>" class="read-big">Read More...</a></p>
         <div class="profile">
           <img src="<%= blog.authorAvatar %>" alt="" class="profile-img" />
           <span class="profile-name"><%= blog.author.username %></span>
@@ -475,5 +507,38 @@
         ></a>
       </div>
     </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById("blog-search");
+        const postBoxes = document.querySelectorAll(".post-box");
+
+        searchInput.addEventListener("input", function () {
+          const searchValue = this.value.trim().toLowerCase();
+
+          postBoxes.forEach((postBox) => {
+            const postTitle = postBox
+              .querySelector(".post-title")
+              .textContent.toLowerCase();
+            const postAuthor = postBox
+              .querySelector(".profile-name")
+              .textContent.toLowerCase();
+            const postTags = postBox
+              .querySelector(".category")
+              .textContent.toLowerCase();
+
+            if (
+              postTitle.includes(searchValue) ||
+              postAuthor.includes(searchValue) ||
+              postTags.includes(searchValue)
+            ) {
+              postBox.style.display = "block";
+            } else {
+              postBox.style.display = "none";
+            }
+          });
+        });
+      });
+    </script>
   </body>
 </html>
