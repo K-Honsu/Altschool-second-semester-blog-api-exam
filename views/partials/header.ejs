@@ -98,6 +98,15 @@
         color: var(--bg-color);
       }
 
+      .delete {
+        border: 2px solid var(--second-color);
+        border-radius: 10px;
+        color: white;
+        background-color: var(--second-color);
+        padding: 18px 10px;
+        font-size: 15px;
+      }
+
       .logo span {
         color: var(--second-color);
       }
@@ -200,8 +209,9 @@
             <a href="/views/create" class="login">Create Blog</a>
             <a href="/views/manageblogs" class="login">Manage Blog</a>
             <a href="/views/logout" class="login">Logout</a>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">About</a></li>
+            <form action="/views/delete/<%= user._id %>?_method=DELETE" method="POST">
+              <input type="submit" name="user_id" value="Delete Account" class="delete">
+            </form>
             <div class="closeMenu"><i class="fa fa-times"></i></div>
           </ul>
           <% } %>

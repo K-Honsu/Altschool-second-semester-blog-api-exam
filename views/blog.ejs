@@ -484,8 +484,12 @@
         <p class="post-description"><%= blog.body %></p>
         <p class="post-description"><a href="/views/detail/<%= blog._id %>" class="read-big">Read More...</a></p>
         <div class="profile">
-          <img src="<%= blog.authorAvatar %>" alt="" class="profile-img" />
-          <span class="profile-name"><%= blog.author.username %></span>
+          <img src="../public/profile-2.jpg" alt="" class="profile-img" />
+          <% if (blog.author) { %>
+            <span class="profile-name"><%= blog.author.username %></span>
+        <% } else { %>
+            <span class="profile-name">Unknown Author</span>
+        <% } %>
         </div>
       </div>
       <% } %> <% }); %>

@@ -60,6 +60,34 @@ const createUser = async ({first_name, last_name , gender, email, username, pass
     }
 }
 
+const DeleteAccount = async ({user_id}) => {
+    try {
+        const user = await UserModel.findById({_id : user_id})
+        console.log(user)
+        if (!user) {
+            return {
+                status : "error",
+                code : 404,
+                message : "User Not found"
+            }
+        }
+        await user.deleteOne()
+        return {
+            status : "success",
+            code : 200,
+            message : "User Account deleled successfully"
+        }
+    } catch (error) {
+        return {
+            status : "error",
+            code : 422,
+            message : error.message
+        }
+    }
+}
+
+
 module.exports = {
-    createUser
+    createUser,
+    DeleteAccount
 }

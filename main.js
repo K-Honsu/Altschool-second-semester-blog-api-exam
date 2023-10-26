@@ -3,7 +3,11 @@ const userRouter = require("./users/users.routers")
 const authRouter = require("./auth/auth.router")
 const blogRouter = require("./blog/blog.router")
 const viewRouter = require("./views/views.routers")
+const passportSetup = require("./utils/passport")
 const methodOverride = require('method-override')
+const session = require('express-session');
+const passport = require("passport")
+require("dotenv").config()
 
 
 
@@ -15,6 +19,14 @@ app.set("view engine", "ejs")
 app.use(express.json())
 app.use(express.urlencoded({ extended : true }))
 app.use(methodOverride("_method"))
+app.use(session({
+    secret : process.env.COOKIEKEY,
+    saveUninitialized: false,
+    resave : false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
 
 
 app.use("/auth", authRouter)

@@ -3,6 +3,7 @@ const blogService = require("../blog/blog.services")
 const authServices = require("../auth/auth.services")
 const userService = require("../users/user.service")
 const jwt = require("jsonwebtoken")
+const passport = require("passport")
 const cookieParser = require("cookie-parser")
 const { settings } = require("../utils/cloudinary")
 const { countWords, calculateReadingTime } = require("../utils/reading.algorithm")
@@ -118,6 +119,23 @@ router.post("/signup", async (req, res) => {
     }
 })
 
+router.get("/logwgoogle", passport.authenticate("google", {
+    scope : ["profile", "email"]
+}))
+
+// callback for google
+router.get("/google/redirect", passport.authenticate("google"), async (req, res) => {
+    const userId = req.user._id
+    const token = jwt.sign({ _id: userId }, process.env.JWT_SECRET);
+    res.cookie("jwt", token, {
+        maxAge: 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+    const response = await blogService.getAllBlogs()
+    const blogs = Array.isArray(response.data) ? response.data : [];
+    res.redirect("/views/blog")
+})
+
 
 
 router.use(async (req, res, next) => {
@@ -143,11 +161,25 @@ router.get("/logout", (req, res) => {
     res.redirect("blog")
 })
 
+router.delete("/delete/:userId", async (req, res) => {
+    // const user_id = res.locals.user._id
+    // const user = req.body.user_id
+    const user_id = req.params.userId
+    console.log(user_id)
+    const response = await userService.DeleteAccount({user_id})
+    console.log(response)
+    if (response.code === 200) {
+        res.redirect("/views/log")
+    }
+})
+
 router.get("/blog", async (req, res) => {
     const response = await blogService.getAllBlogs()
     const blogs = Array.isArray(response.data) ? response.data : [];
     return res.render("blog", { user: res.locals.user || null, blogs })
 })
+
+
 
 router.get("/create", async (req, res) => {
     res.render("create", { user: res.locals.user })
@@ -166,7 +198,7 @@ router.post("/create", upload.single("file"), async (req, res) => {
 })
 
 router.get("/manageblogs", async (req, res) => {
-    const response = await blogService.getAllBlogs()
+    const response = await blogService.getBlogsByUser(res.locals.user._id);
     return res.render("manageblogs", { user: res.locals.user, blogs: response.data })
 })
 
