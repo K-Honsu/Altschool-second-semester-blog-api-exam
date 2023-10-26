@@ -38,7 +38,6 @@ const createBlog = async (req, res) => {
             data1 : blog
         })
     } catch (error) {
-        console.log({ error })
         return res.status(422).json({
             status: "error",
             data: error.message
@@ -138,7 +137,6 @@ const updateBlog = async (req, res) => {
             existingBlog
         })
     } catch (error) {
-        console.log({ error })
         return res.status(422).json({
             status: "error",
             data: error.message

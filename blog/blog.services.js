@@ -36,8 +36,6 @@ const createBlog = async (blog, author_id, file) => {
 
         if (file) {
             result = await streamUploadFile(file);
-            console.log(file)
-            console.log(result)
         }
         const blogBody = blog
         const newBlog = new BlogModel()
@@ -67,7 +65,7 @@ const createBlog = async (blog, author_id, file) => {
 const updateBlogStatus = async (blogId, author_id) => {
     try {
         const updatedBlog = await BlogModel.findByIdAndUpdate(
-            {_id : blogId},
+            { _id: blogId },
             { state: 'published' },
         );
 
@@ -98,9 +96,8 @@ const updateBlogStatus = async (blogId, author_id) => {
 const getOneBlog = async (blogId) => {
     try {
         const blog = await BlogModel.findById(
-            {_id : blogId}
-        )
-        console.log({blog})
+            { _id: blogId }
+        ).populate("author", "username")
         if (!blog) {
             return {
                 status: 'error',
@@ -108,7 +105,8 @@ const getOneBlog = async (blogId) => {
                 data: 'Blog not found',
             };
         }
-
+        blog.read_count += 1;
+        await blog.save();
         return {
             status: 'success',
             code: 200,

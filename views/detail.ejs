@@ -421,27 +421,27 @@
     />
   </head>
   <body>
-    <header>
-      <%- include('./partials/header'); %>
-    </header>
+    <header><%- include('./partials/header'); %></header>
 
     <section class="post-header">
       <div class="header-content post-container">
         <a href="/views/blog" class="back-home">Back To Home</a>
-        <h1 class="header-title"><%= blog.title %> </h1>
+        <h1 class="header-title"><%= blog.title %></h1>
         <img src="<%= blog.path %>" alt="" class="header-img" />
       </div>
     </section>
 
     <section class="post-content post-container">
-      <h2 class="sub-heading"><%= blog.tag %> </h2>
+      <h2 class="sub-heading"><%= blog.tag %></h2>
+      <p class="post-text"><%= blog.title %></p>
+      <p class="post-text"><%= blog.description %></p>
+      <p><%= blog.body %></p>
+      <br>
+      <br>
+      <h1>Written by <%= blog.author.username %> </h1>
+
       <p class="post-text">
-        <%= blog.title %> 
-      </p>
-      <p class="post-text">
-        <%= blog.description %> 
-      </p>
-      <%= blog.body %> 
+        Estimated Reading Time: <%= readingTime %> minute<%= readingTime > 1 ? 's' : '' %>
       </p>
     </section>
 
