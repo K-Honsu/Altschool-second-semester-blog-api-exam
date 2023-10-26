@@ -229,6 +229,12 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       }
 
+      .btn a {
+        text-decoration: none; /* Remove underlines from the link */
+        color: white; /* Text color */
+      }
+      
+
       .form-box.register {
         /* Set a fixed height for the form */
         height: 555px; /* Adjust the height as needed */
@@ -265,6 +271,10 @@
 
       .login-register p a:hover {
         text-decoration: underline;
+      }
+
+      button {
+        margin-top: 20px;
       }
     </style>
     <link
@@ -327,13 +337,14 @@
                 <p><%= message %></p>
               </div>
               <% } %>
+              <button type="" class="btn"><a href="/views/logwgoogle">Continue with Google</a></button>
             </div>
           </form>
         </div>
 
         <!-- sign up -->
         <div class="form-box register">
-          <form action="/views/signup" method="post" style="margin-bottom: 20px;">
+          <form action="/views/signup" method="post" style="margin-bottom: 7px;">
             <h2>Sign Up</h2>
 
             <div class="input-box">
@@ -383,8 +394,6 @@
                 Already have an account?
                 <a href="#" class="login-link">Sign In</a>
               </p>
-              <br>
-              <button type="submit" class="btn">Sign Up with Google</button>
             </div>
           </form>
         </div>

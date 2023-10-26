@@ -122,9 +122,29 @@ const getOneBlog = async (blogId) => {
     }
 }
 
+const getBlogsByUser = async (userId) => {
+    try {
+        const blogs = await BlogModel.find({ author: userId }).populate("author", "username");
+        return {
+            status: 'success',
+            code: 200,
+            message: 'Blogs by user retrieved',
+            data: blogs,
+        };
+    } catch (error) {
+        return {
+            status: 'error',
+            code: 500,
+            data: error.message,
+        };
+    }
+};
+
+
 module.exports = {
     getAllBlogs,
     createBlog,
     updateBlogStatus,
-    getOneBlog
+    getOneBlog,
+    getBlogsByUser
 }
