@@ -4,6 +4,7 @@ const authServices = require("../auth/auth.services")
 const userService = require("../users/user.service")
 const jwt = require("jsonwebtoken")
 const passport = require("passport")
+const BlogModel = require("../models/blog")
 const cookieParser = require("cookie-parser")
 const { settings } = require("../utils/cloudinary")
 const { countWords, calculateReadingTime } = require("../utils/reading.algorithm")
@@ -28,7 +29,7 @@ router.get("/detail/:blogId", async (req, res) => {
     const wordCount = countWords(response.data.body);
     const readingSpeed = 200;
     const readingTime = calculateReadingTime(wordCount, readingSpeed);
-    res.render("detail", {user : null, blog : response.data, readingTime})
+    res.render("detail", { user: null, blog: response.data, readingTime })
 })
 
 router.get("/log", async (req, res) => {
@@ -53,7 +54,7 @@ router.post("/log", async (req, res) => {
 router.get("/resetPassword/:user_id/:token", async (req, res) => {
     const user_id = req.params.user_id;
     const token = req.params.token;
-    res.render("resetPassword", { user_id, token,message: null });
+    res.render("resetPassword", { user_id, token, message: null });
 });
 
 router.post("/resetPassword/:user_id/:token", async (req, res) => {
@@ -77,19 +78,19 @@ router.post("/resetPassword/:user_id/:token", async (req, res) => {
 
 
 router.get("/forgotPassword", async (req, res) => {
-    res.render("forgotPassword", {message : null})
+    res.render("forgotPassword", { message: null })
 })
 
 router.post("/forgotPassword", async (req, res) => {
     const response = await authServices.ForgotPassword({
-        email : req.body.email
+        email: req.body.email
     })
-    if (response.code === 404 ) {
-        res.render("forgotPassword", {message : response.data})
-    } else if (response.code === 422 ) {
-        res.render("forgotPassword", {message : response.data})
-    } else if (response.code === 200 ) {
-        res.render("forgotPassword", {message : response.data})
+    if (response.code === 404) {
+        res.render("forgotPassword", { message: response.data })
+    } else if (response.code === 422) {
+        res.render("forgotPassword", { message: response.data })
+    } else if (response.code === 200) {
+        res.render("forgotPassword", { message: response.data })
     }
 })
 
@@ -118,7 +119,7 @@ router.post("/signup", async (req, res) => {
 })
 
 router.get("/logwgoogle", passport.authenticate("google", {
-    scope : ["profile", "email"]
+    scope: ["profile", "email"]
 }))
 
 // callback for google
@@ -128,7 +129,7 @@ router.get("/google/redirect", passport.authenticate("google"), async (req, res)
     res.cookie("jwt", token, {
         maxAge: 24 * 60 * 60 * 1000,
         httpOnly: true,
-      });
+    });
     const response = await blogService.getAllBlogs()
     const blogs = Array.isArray(response.data) ? response.data : [];
     res.redirect("/views/blog")
@@ -154,7 +155,7 @@ router.get("/google/redirect", passport.authenticate("google"), async (req, res)
 
 
 
-router.use( async (req, res, next) => {
+router.use(async (req, res, next) => {
     const token = req.cookies.jwt
     if (token) {
         try {
@@ -177,7 +178,7 @@ router.get("/logout", (req, res) => {
 
 router.delete("/delete/:userId", async (req, res) => {
     const user_id = req.params.userId
-    const response = await userService.DeleteAccount({user_id})
+    const response = await userService.DeleteAccount({ user_id })
     if (response.code === 200) {
         res.redirect("/views/log")
     }
@@ -214,14 +215,14 @@ router.get("/blog", async (req, res) => {
     const totalBlogs = response.data.totalBlogs;
     const blogsPerPage = 20; // Change this according to your setup
     const pages = Math.ceil(totalBlogs / blogsPerPage);
-    return res.render("blog", {  user: res.locals.user || null, blogs,  pages, current : page  });
+    return res.render("blog", { user: res.locals.user || null, blogs, pages, current: page });
 });
 
 
 
 
 router.get("/create-blog", async (req, res) => {
-    res.render("create-blog", {user: res.locals.user})
+    res.render("create-blog", { user: res.locals.user })
 })
 
 router.post("/create-blog", upload.single("file"), async (req, res) => {
@@ -233,6 +234,28 @@ router.post("/create-blog", upload.single("file"), async (req, res) => {
         res.redirect("blog")
     } else {
         res.render("create-blog", { error: response.data })
+    }
+})
+
+router.get("/editBlog/:id", async (req, res) => {
+    const blogId = req.params.id;
+    const blog = await BlogModel.findById(blogId);
+    if (!blog) {
+        return res.render('manageblogs', { user: res.locals.user });
+    }
+    res.render('editBlog', { blog });
+})
+
+router.post("/editBlog/:id", upload.single("file"), async (req, res) => {
+    try {
+        const blogId = req.params.id
+        const {title, description, body, tag} = req.body
+        const response = await blogService.editBlog(blogId, title, description, body, tag)
+        if (response.code === 200){
+            res.redirect("/views/manageblogs")
+        }
+    } catch (error) {
+        res.render("editBlog")
     }
 })
 

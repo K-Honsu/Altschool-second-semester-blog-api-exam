@@ -192,11 +192,42 @@ const getBlogsByUser = async (userId) => {
     }
 };
 
+const editBlog = async (blogId, title, description, body, tag) => {
+    try {
+        const updateBlog = await BlogModel.findByIdAndUpdate(blogId, {
+            title,
+            description,
+            body,
+            tag
+        })
+        if (!updateBlog) {
+            return {
+                status : "error",
+                code : 404,
+                message : "Blog not found"
+            }
+        }
+        return {
+            status : "success",
+            code : 200,
+            data : updateBlog
+        }
+    } catch (error) {
+        console.log(error)
+        return {
+            status : "error",
+            code : 500,
+            data : error.message
+        }
+    }
+}
+
 
 module.exports = {
     getAllBlogs,
     createBlog,
     updateBlogStatus,
     getOneBlog,
-    getBlogsByUser
+    getBlogsByUser,
+    editBlog
 }
