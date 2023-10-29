@@ -16,7 +16,7 @@ API Docs: https://documenter.getpostman.com/view/25856069/2s9YRGyUus
 
 ## Demo
 
-You can try out the live demo of Anony-Memo at [https://altschool-blog-service.onrender.com/views/welcome](https://altschool-blog-service.onrender.com/views/welcome).
+You can try out the live demo of Digital Chronicles at [https://altschool-blog-service.onrender.com/views/welcome](https://altschool-blog-service.onrender.com/views/welcome).
 
 ## Features
 
