@@ -7,6 +7,8 @@ const passportSetup = require("./utils/passport")
 const methodOverride = require('method-override')
 const session = require('express-session');
 const passport = require("passport")
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger-output.json');
 require("dotenv").config()
 
 
@@ -27,6 +29,8 @@ app.use(session({
 
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 
 app.use("/auth", authRouter)
