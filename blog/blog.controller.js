@@ -3,7 +3,7 @@ const { cloudinaryV2, streamUploadFile } = require("../utils/cloudinary")
 
 const createBlog = async (req, res) => {
     try {
-        const author = req.user
+        const author = req.user || {}
         const file = req.file
         const { title, description, tag, reading_time, body } = req.body
         let result;
@@ -31,7 +31,7 @@ const createBlog = async (req, res) => {
             cloudinaryId: result.public_id,
             path : result.secure_url,
             body,
-            author: author._id,
+            author: author._id || null,
         })
         return res.status(201).json({
             status: "success",
