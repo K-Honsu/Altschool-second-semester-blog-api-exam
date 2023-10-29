@@ -227,7 +227,11 @@ router.get("/create-blog", async (req, res) => {
 router.post("/create-blog", upload.single("file"), async (req, res) => {
     const author_id = res.locals.user._id
     const file = req.file
-    const response = await blogService.createBlog(req.body, author_id, file.buffer)
+
+    console.log("req.file: ", file)
+
+    const response = await blogService.createBlog(req.body, author_id, file ? file.buffer : undefined)
+    console.logz(response)
     if (response.code === 201) {
         res.redirect("blog")
     } else {
