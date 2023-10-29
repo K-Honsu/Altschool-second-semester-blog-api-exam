@@ -23,15 +23,12 @@ const streamUploadFile = async (buffer) => {
         const stream = cloudinaryV2.v2.uploader.upload_stream(
             {
                 resource_type: "auto",
-                // You can add other upload options here
             },
             function (err, result){
                 if(err) reject(`error ${err}`)
                 resolve(result)
             }
         );
-
-        // Pipe the buffer to the Cloudinary stream
         streamifier.createReadStream(buffer).pipe(stream);
     });
 };

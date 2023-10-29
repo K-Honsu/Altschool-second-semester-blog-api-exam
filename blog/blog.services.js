@@ -1,31 +1,83 @@
 const BlogModel = require("../models/blog")
 const { cloudinaryV2, streamUploadFile } = require("../utils/cloudinary")
 
-const getAllBlogs = async (req, res) => {
+// const getAllBlogs = async (req, res) => {
+//     try {
+//         // let { page, size } = req.query
+//         // if (!page) {
+//         //     page = 1
+//         // }
+//         // if (!size) {
+//         //     size = 20
+//         // }
+//         // const limit = parseInt(size)
+//         // const skip = (page - 1) * size
+//         const blog = await BlogModel.find().populate("author", "username")
+//         return {
+//             code: 200,
+//             status: "success",
+//             data: blog
+//         }
+//     } catch (error) {
+//         return {
+//             code: 422,
+//             status: "error",
+//             data: error.message
+//         }
+//     }
+// }
+
+
+// const getAllBlogs = async (params) => {
+//     try {
+//         const page = parseInt(params.page) || 1
+//         const limit = parseInt(params.limit) || 20
+//         const skip = (page -1) * limit
+//         const blogs = await BlogModel.find().skip(skip).limit(limit)
+//         // console.log(blogs)
+//         console.log("hi")
+//         return {
+//             code : 200, 
+//             status : "success",
+//             data : {
+//                 blogs,
+//                 page,
+//                 limit
+//             }
+//         }
+//     } catch (error) {
+//         return {
+//             code: 422,
+//             status: "error",
+//             data: error.message
+//         }
+//     }
+// }
+
+const getAllBlogs = async ( page = 1, limit ) => { // Accept an object with 'page' and 'limit'
     try {
-        // let { page, size } = req.query
-        // if (!page) {
-        //     page = 1
-        // }
-        // if (!size) {
-        //     size = 20
-        // }
-        // const limit = parseInt(size)
-        // const skip = (page - 1) * size
-        const blog = await BlogModel.find().populate("author", "username")
+        const skip = (page - 1) * limit;
+        const blogs = await BlogModel.find()
+            .skip(skip)
+            .limit(limit)
+            .populate("author", "username")
         return {
             code: 200,
             status: "success",
-            data: blog
-        }
+            data: {
+                blogs,
+                page,
+                limit
+            }
+        };
     } catch (error) {
         return {
             code: 422,
             status: "error",
             data: error.message
-        }
+        };
     }
-}
+};
 
 const createBlog = async (blog, author_id, file) => {
     try {
