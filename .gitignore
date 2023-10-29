@@ -131,3 +131,7 @@ dist
 
 # Stores Swagger docs
 .swagger-output.json
+
+.docker-compose.yml
+docker-compose.yml
+
