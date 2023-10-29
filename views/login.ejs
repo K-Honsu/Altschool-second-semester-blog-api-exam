@@ -180,7 +180,7 @@
 
       .input-box input:focus ~ label,
       .input-box select:focus ~ label,
-      .input-box select:valid ~label,
+      .input-box select:valid ~ label,
       .input-box input:valid ~ label {
         top: -5px;
       }
@@ -233,15 +233,14 @@
         text-decoration: none; /* Remove underlines from the link */
         color: white; /* Text color */
       }
-      
 
       .form-box.register {
         /* Set a fixed height for the form */
         height: 555px; /* Adjust the height as needed */
-    
+
         /* Add scrollbars when the content exceeds the height */
         overflow-y: auto;
-    
+
         /* Other existing styles for the form */
         position: absolute;
         display: flex;
@@ -253,8 +252,7 @@
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
         color: #e4e4e4;
-    }
-    
+      }
 
       .form-box .login-register {
         font-size: 14.5px;
@@ -337,25 +335,30 @@
                 <p><%= message %></p>
               </div>
               <% } %>
-              <button type="" class="btn"><a href="/views/logwgoogle">Continue with Google</a></button>
+              <div class="google-icon">
+                <button type="" class="btn">
+                  <a href="/views/logwgoogle" style="text-align: center; margin-bottom: 20px; margin-top: 100px;">Continue with Google</a>
+                  <img src="../public/icons8-google-48.png" alt="" width="27px" style="text-align: center;">
+                </button>
+              </div>
             </div>
           </form>
         </div>
 
         <!-- sign up -->
         <div class="form-box register">
-          <form action="/views/signup" method="post" style="margin-bottom: 7px;">
+          <form action="/views/signup" method="post" style="margin-bottom: 7px">
             <h2>Sign Up</h2>
 
             <div class="input-box">
               <span class="icon"><i class="bx bxs-user"></i></span>
-              <input type="text" required name="first_name", id="first_name" />
+              <input type="text" required name="first_name" , id="first_name" />
               <label>First Name</label>
             </div>
 
             <div class="input-box">
               <span class="icon"><i class="bx bxs-user"></i></span>
-              <input type="text" required name="last_name", id="last_name"/>
+              <input type="text" required name="last_name" , id="last_name" />
               <label>Last Name</label>
             </div>
 
@@ -376,7 +379,7 @@
 
             <div class="input-box">
               <span class="icon"><i class="bx bxs-envelope"></i></span>
-              <input type="email" required  name="email"/>
+              <input type="email" required name="email" />
               <label>Email</label>
             </div>
 

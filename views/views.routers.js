@@ -81,11 +81,9 @@ router.get("/forgotPassword", async (req, res) => {
 })
 
 router.post("/forgotPassword", async (req, res) => {
-    console.log(req.body)
     const response = await authServices.ForgotPassword({
         email : req.body.email
     })
-    console.log(response)
     if (response.code === 404 ) {
         res.render("forgotPassword", {message : response.data})
     } else if (response.code === 422 ) {
@@ -136,22 +134,38 @@ router.get("/google/redirect", passport.authenticate("google"), async (req, res)
     res.redirect("/views/blog")
 })
 
+// router.get("/blog", async (req, res) => {
+//     console.log("reached");
+//     try {
+//         const page = parseInt(req.query.page) || 1; // Extract 'page' from the query string
+//         const limit = parseInt(req.query.limit) || 20; // Extract 'limit' from the query string
+//         const response = await blogService.getAllBlogs(page, limit ); // Pass 'page' and 'limit' as an object
+//         console.log(response);
+//         const blogs = Array.isArray(response.data.blogs) ? response.data.blogs : [];
+//         if (response.code === 200) {
+//             return res.render("blog", {  user:null, blogs });
+//         }
+//     } catch (error) {
+//         res.redirect("/views/log");
+//         console.log(error);
+//     }
+// });
 
 
-router.use(async (req, res, next) => {
+
+
+router.use( async (req, res, next) => {
     const token = req.cookies.jwt
     if (token) {
         try {
-            const decodedValue = await jwt.verify(token, process.env.JWT_SECRET, { maxAge: 36000 })
+            const decodedValue = await jwt.verify(token, process.env.JWT_SECRET, { maxAge: 24 * 60 * 60 * 1000 })
             res.locals.user = decodedValue
             next()
         } catch (error) {
             res.redirect("blog")
         }
     } else {
-        const response = await blogService.getAllBlogs()
-        const blogs = Array.isArray(response.data) ? response.data : [];
-        res.render("blog", { message: null, user: null, blogs })
+        next()
     }
 })
 
@@ -162,40 +176,65 @@ router.get("/logout", (req, res) => {
 })
 
 router.delete("/delete/:userId", async (req, res) => {
-    // const user_id = res.locals.user._id
-    // const user = req.body.user_id
     const user_id = req.params.userId
-    console.log(user_id)
     const response = await userService.DeleteAccount({user_id})
-    console.log(response)
     if (response.code === 200) {
         res.redirect("/views/log")
     }
 })
 
+// router.get("/blog", async (req, res) => {
+//     const response = await blogService.getAllBlogs()
+//     const blogs = Array.isArray(response.data) ? response.data : [];
+//     return res.render("blog", { user: res.locals.user || null, blogs })
+// })
+
+// router.get("/blog", async (req, res) => {
+//     try {
+//         const params = req.query
+//         const response = await blogService.getAllBlogs(params)
+//         console.log(response)
+//         const blogs = Array.isArray(response.data) ? response.data : []
+//         if (response.code === 200) {
+//             return res.render("blog", { user: res.locals.user || null, blogs })
+//         }
+//     } catch (error) {
+//         res.redirect("/views/log")
+//         console.log(error)
+//     }
+// })
+
+
+
 router.get("/blog", async (req, res) => {
-    const response = await blogService.getAllBlogs()
-    const blogs = Array.isArray(response.data) ? response.data : [];
-    return res.render("blog", { user: res.locals.user || null, blogs })
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const response = await blogService.getAllBlogs(page, limit);
+    const blogs = Array.isArray(response.data.blogs) ? response.data.blogs : [];
+    const totalBlogs = response.data.totalBlogs;
+    const blogsPerPage = 20; // Change this according to your setup
+    const pages = Math.ceil(totalBlogs / blogsPerPage);
+    return res.render("blog", {  user: res.locals.user || null, blogs,  pages, current : page  });
+});
+
+
+
+
+router.get("/create-blog", async (req, res) => {
+    res.render("create-blog", {user: res.locals.user})
 })
 
-
-
-router.get("/create", async (req, res) => {
-    res.render("create", { user: res.locals.user })
-})
-
-
-router.post("/create", upload.single("file"), async (req, res) => {
+router.post("/create-blog", upload.single("file"), async (req, res) => {
     const author_id = res.locals.user._id
     const file = req.file
     const response = await blogService.createBlog(req.body, author_id, file.buffer)
     if (response.code === 201) {
         res.redirect("blog")
     } else {
-        res.render("create", { error: response.data })
+        res.render("create-blog", { error: response.data })
     }
 })
+
 
 router.get("/manageblogs", async (req, res) => {
     const response = await blogService.getBlogsByUser(res.locals.user._id);

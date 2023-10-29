@@ -311,6 +311,39 @@
         margin-top: 20px;
       }
 
+      .pagination {
+        margin: 20px auto;
+        text-align: center;
+      }
+
+      .pagination ul {
+        list-style: none;
+        padding: 0;
+      }
+
+      .pagination li {
+        display: inline;
+        margin: 0 5px;
+      }
+
+      .pagination a {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s;
+      }
+
+      .pagination a:hover {
+        background-color: #0056b3;
+      }
+
+      .pagination .active a {
+        background-color: #333;
+      }
+
       .search-box input {
         padding: 10px;
         border: 2px solid #ccc;
@@ -475,25 +508,39 @@
       <div class="post-box <%= blog.category %>">
         <img src="<%= blog.path %>" alt="" class="post-img" />
         <h2 class="category"><%= blog.tag %></h2>
-        <a class="post-title">
-          <%= blog.title %>
-        </a>
+        <a class="post-title"> <%= blog.title %> </a>
         <% const postDate = blog.is_created; %>
         <span class="post-date"><%= blog.is_created.toUTCString() %></span>
         <p class="post-description"><%= blog.description %></p>
         <p class="post-description"><%= blog.body %></p>
-        <p class="post-description"><a href="/views/detail/<%= blog._id %>" class="read-big">Read More...</a></p>
+        <p class="post-description">
+          <a href="/views/detail/<%= blog._id %>" class="read-big"
+            >Read More...</a
+          >
+        </p>
         <div class="profile">
           <img src="../public/profile-2.jpg" alt="" class="profile-img" />
           <% if (blog.author) { %>
-            <span class="profile-name"><%= blog.author.username %></span>
-        <% } else { %>
-            <span class="profile-name">Unknown Author</span>
-        <% } %>
+          <span class="profile-name"><%= blog.author.username %></span>
+          <% } else { %>
+          <span class="profile-name">Unknown Author</span>
+          <% } %>
         </div>
       </div>
       <% } %> <% }); %>
     </section>
+
+    <!-- Add a "Previous" button -->
+    <div class="pagination">
+      <button>
+        <a href="/views/blog?page=<%= current - 1 %>">Previous</a>
+      </button>
+
+      <!-- Add a "Next" button -->
+      <button>
+        <a href="/views/blog?page=<%= current + 1 %>">Next</a>
+      </button>
+    </div>
 
     <div class="footer container">
       <p>&#169; K_Honsu All Rights Reserved.</p>
