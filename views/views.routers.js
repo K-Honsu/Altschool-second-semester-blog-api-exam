@@ -224,20 +224,45 @@ router.get("/create-blog", async (req, res) => {
     res.render("create-blog", {user: res.locals.user})
 })
 
+// router.post("/create-blog", upload.single("file"), async (req, res) => {
+//     const author_id = res.locals.user._id
+//     const file = req.file
+
+//     console.log("req.file: ", file)
+
+//     const response = await blogService.createBlog(req.body, author_id, file ? file.buffer : undefined)
+//     console.log(response)
+//     if (response.code === 201) {
+//         res.redirect("blog")
+//     } else {
+//         res.render("create-blog", { error: response.data })
+//     }
+// })
+
 router.post("/create-blog", upload.single("file"), async (req, res) => {
-    const author_id = res.locals.user._id
-    const file = req.file
+    const author_id = res.locals.user._id;
 
-    console.log("req.file: ", file)
+    try {
+        const file = req.file;
 
-    const response = await blogService.createBlog(req.body, author_id, file ? file.buffer : undefined)
-    console.log(response)
-    if (response.code === 201) {
-        res.redirect("blog")
-    } else {
-        res.render("create-blog", { error: response.data })
+        // Check if a file was uploaded
+        if (!file) {
+            // Handle the case when no file is uploaded, you can use default values
+            const response = await blogService.createBlog(req.body, author_id, null);
+        } else {
+            const response = await blogService.createBlog(req.body, author_id, file.buffer);
+        }
+
+        if (response.code === 201) {
+            res.redirect("blog");
+        } else {
+            res.render("create-blog", { error: response.data });
+        }
+    } catch (error) {
+        res.render("create-blog", { error: error.message });
     }
-})
+});
+
 
 
 router.get("/manageblogs", async (req, res) => {
