@@ -1,4 +1,4 @@
-FROM node:14.16.0-alpine3.13
+FROM node:20-alpine
 
 WORKDIR /app
 
@@ -10,4 +10,4 @@ COPY . .
 
 EXPOSE 8080
 
-CMD [ "node", "server.js" ]
+CMD node server.js

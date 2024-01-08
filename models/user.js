@@ -9,7 +9,7 @@ const UserSchema = new schema({
     email: { type: String, null: false },
     gender: { type: String, enum: ["male", "female"] },
     password: { type: String },
-    googleId :{type : String, default: null}, 
+    googleId :{type : String, default: null},
     is_created: { type: Date, default: new Date() }
 })
 
