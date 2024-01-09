@@ -1,0 +1,44 @@
+# specify the version of docker-compose
+
+version: '3.8'
+
+# define services and containers to be run
+services:
+  api:
+    depends_on:
+      - db
+    build: ./
+    ports: [ 8080:8080 ]
+    environment:
+      - MONGOOSE_URL=mongodb://localhost:27017/blog
+      - CLIENT_ID=262900477728-p16n9u5gg67pur3vvt70sqsgrp89gikb.apps.googleusercontent.com
+      - CLIENT_SECRET=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
+      - PORT=8080
+      - JWT_SECRET= secret_key
+      - EMAIL_USER=feranmia51@gmail.com
+      - EMAIL_PASSWORD=ccximxtaaatfssbt
+      - CLOUD_NAME=dnl3yjnre
+      - API_KEY=729318447365744
+      - API_SECRET=Ins-HMiDJIJtewUzSEuxy0Owkgk
+      - COOKIEKEY=somerandomcookiehere
+    # develop:
+    #   watch:
+    #     - path: ./package.json
+    #       action: rebuild
+    #     - path: ./package-lock.json
+    #       action: rebuild
+
+    #     - path: ./
+    #       target: /app
+    #       action: sync
+    command: npm run dev
+
+  db:
+    image: mongo:latest
+    container_name: mongodb
+    ports: [ 27017:27017 ]
+    volumes:
+      - blog:/data/db
+
+volumes:
+  blog:
